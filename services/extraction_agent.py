@@ -56,14 +56,17 @@ class ExtractionAgent:
 
             content = completion.choices[0].message.content.strip()
             
-            # Remove markdown JSON fences (e.g., ```json ... ```) safely
-            if content.startswith("```"):
-                lines = content.splitlines()
-                if lines[0].startswith("```"):
-                    lines = lines[1:]
-                if lines and lines[-1].startswith("```"):
-                    lines = lines[:-1]
-                content = "\n".join(lines).strip()
+            import re
+            # Extract markdown JSON block if present
+            json_match = re.search(r'```(?:json)?(.*?)```', content, re.DOTALL)
+            if json_match:
+                content = json_match.group(1).strip()
+            else:
+                # Fallback: extract substring between first { and last }
+                start = content.find('{')
+                end = content.rfind('}')
+                if start != -1 and end != -1:
+                    content = content[start:end+1]
             
             parsed_data = json.loads(content)
             return ExtractionResultSchema.model_validate(parsed_data)

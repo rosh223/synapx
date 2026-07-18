@@ -1,4 +1,5 @@
-from typing import List, Optional
+from typing import List, Optional, Any
+# pyrefly: ignore [missing-import]
 from pydantic import BaseModel, Field
 from enum import Enum
 
@@ -11,7 +12,7 @@ class PolicySchema(BaseModel):
 class IncidentSchema(BaseModel):
     date: Optional[str] = Field(None, description="Date of the incident")
     time: Optional[str] = Field(None, description="Time of the incident")
-    location: Optional[str] = Field(None, description="Full address or description of where the loss occurred")
+    location: Optional[Any] = Field(None, description="Full address or description of where the loss occurred")
     description: Optional[str] = Field(None, description="Narrative description of what happened")
     authorityContacted: Optional[str] = Field(None, description="Police or Fire department name if contacted")
     reportNumber: Optional[str] = Field(None, description="Authority report number")
@@ -23,14 +24,14 @@ class PartyType(str, Enum):
     INSURED_DRIVER = 'Insured Driver'
 
 class PartySchema(BaseModel):
-    name: str
-    type: PartyType
+    name: Optional[str] = None
+    type: Optional[PartyType] = None
     contactDetails: Optional[str] = None
     injuries: Optional[str] = Field(None, description="Description of injuries if any")
 
 class AssetSchema(BaseModel):
-    type: str = Field(description="Vehicle, Property, etc.")
-    id: str = Field(description="VIN, Plate Number, or Serial Number")
+    type: Optional[str] = Field(None, description="Vehicle, Property, etc.")
+    id: Optional[str] = Field(None, description="VIN, Plate Number, or Serial Number")
     make: Optional[str] = None
     model: Optional[str] = None
     year: Optional[str] = None
