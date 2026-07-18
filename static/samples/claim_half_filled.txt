@@ -1,0 +1,108 @@
+AUTOMOBILE LOSS NOTICE                                          DATE: 03/15/2024
+
+AGENCY: Riverside Insurance Group                               INSURED LOCATION CODE: RIG-4421
+CARRIER: National Auto Mutual                                   NAIC CODE: 23841
+POLICY NUMBER: 
+
+CONTACT
+NAME: Sarah Mitchell
+PHONE: (512) 555-0147
+FAX: 
+E-MAIL: 
+
+AGENCY CUSTOMER ID: CUST-88412
+
+INSURED
+NAME OF INSURED: James Robert Patterson
+INSURED'S MAILING ADDRESS: 4721 Cedar Brook Lane, Austin, TX 78745
+DATE OF BIRTH: 07/22/1985
+MARITAL STATUS: Married
+PRIMARY PHONE: (512) 555-0293 (CELL)
+PRIMARY E-MAIL: 
+
+LOSS
+DATE OF LOSS: 03/12/2024
+TIME OF LOSS: 
+
+LOCATION OF LOSS
+STREET: 
+CITY, STATE, ZIP: Austin, TX
+
+POLICE OR FIRE DEPARTMENT CONTACTED: 
+REPORT NUMBER: 
+
+DESCRIPTION OF ACCIDENT:
+I was driving down the street and someone hit me. I am not sure what happened exactly but the front of my car is damaged. The other driver didn't want to give me their insurance info but I got their license plate.
+
+INSURED VEHICLE
+VEH #: 1
+YEAR: 2022
+MAKE: Honda
+MODEL: Accord Sport
+BODY TYPE: Sedan
+PLATE NUMBER: LKT-4829
+STATE: TX
+V.I.N.: 1HGCV1F34NA021847
+
+OWNER'S NAME AND ADDRESS: James Robert Patterson (Same as insured)
+
+DRIVER'S NAME AND ADDRESS: James Robert Patterson (Same as insured)
+RELATION TO INSURED: Self
+DATE OF BIRTH: 07/22/1985
+DRIVER'S LICENSE NUMBER: TX-12847562
+STATE: TX
+PURPOSE OF USE: Personal
+USED WITH PERMISSION: Y
+
+DESCRIBE DAMAGE:
+Front bumper is cracked and the hood won't open.
+
+CHILD PASSENGER RESTRAINT: N/A 
+
+OTHER VEHICLE / PROPERTY
+OWNER: 
+ADDRESS: 
+PHONE: 
+VEHICLE: White Sedan
+PLATE NUMBER: MRG-7761, State: TX
+V.I.N.: 
+DAMAGE: 
+INSURANCE: 
+
+DRIVER OF OTHER VEHICLE: 
+DATE OF BIRTH: 
+DRIVER'S LICENSE: 
+
+INJURIES
+INJURED PARTY 1: 
+    INJURY DESCRIPTION: 
+    TREATMENT: 
+    STATUS: 
+
+INJURED PARTY 2: 
+    INJURY DESCRIPTION: 
+    TREATMENT: 
+    STATUS: 
+
+WITNESSES
+WITNESS 1: 
+    ADDRESS: 
+    PHONE: 
+    STATEMENT: 
+
+WITNESS 2: 
+    ADDRESS: 
+    PHONE: 
+    STATEMENT: 
+
+ESTIMATE OF DAMAGE
+INSURED VEHICLE: 
+OTHER VEHICLE: 
+
+TOTAL ESTIMATED DAMAGES: 
+
+REMARKS:
+Waiting for more information from the insured.
+
+REPORTED BY: Sarah Mitchell, Riverside Insurance Group
+DATE REPORTED: 03/15/2024

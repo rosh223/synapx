@@ -1,0 +1,120 @@
+AUTOMOBILE LOSS NOTICE                                          DATE: 03/15/2024
+
+AGENCY: Riverside Insurance Group                               INSURED LOCATION CODE: RIG-4421
+CARRIER: National Auto Mutual                                   NAIC CODE: 23841
+POLICY NUMBER: NAM-2024-AUT-0078123
+
+CONTACT
+NAME: Sarah Mitchell
+PHONE: (512) 555-0147
+FAX: (512) 555-0148
+E-MAIL: sarah.mitchell@riversideins.com
+
+AGENCY CUSTOMER ID: CUST-88412
+
+INSURED
+NAME OF INSURED: James Robert Patterson
+INSURED'S MAILING ADDRESS: 4721 Cedar Brook Lane, Austin, TX 78745
+DATE OF BIRTH: 07/22/1985
+MARITAL STATUS: Married
+PRIMARY PHONE: (512) 555-0293 (CELL)
+PRIMARY E-MAIL: jpatterson@email.com
+
+LOSS
+DATE OF LOSS: 03/12/2024
+TIME OF LOSS: 2:45 PM
+
+LOCATION OF LOSS
+STREET: Intersection of Congress Ave and Riverside Dr
+CITY, STATE, ZIP: Austin, TX 78704
+
+POLICE OR FIRE DEPARTMENT CONTACTED: Austin Police Department
+REPORT NUMBER: APD-2024-031247
+
+DESCRIPTION OF ACCIDENT:
+The insured vehicle was traveling southbound on Congress Avenue at approximately 35 mph when a
+white Toyota Camry (driven by Maria Garcia) ran a red light at the intersection of Riverside Drive
+and struck the insured's vehicle on the front passenger side. The impact caused the insured vehicle
+to spin approximately 90 degrees. Both vehicles sustained significant damage. The insured driver
+reported neck pain and dizziness at the scene. Emergency medical services were called and the insured
+was transported to St. David's South Austin Medical Center for evaluation. A police report was filed
+at the scene. Two witnesses were present and provided statements to officers.
+
+INSURED VEHICLE
+VEH #: 1
+YEAR: 2022
+MAKE: Honda
+MODEL: Accord Sport
+BODY TYPE: Sedan
+PLATE NUMBER: LKT-4829
+STATE: TX
+V.I.N.: 1HGCV1F34NA021847
+
+OWNER'S NAME AND ADDRESS: James Robert Patterson (Same as insured)
+
+DRIVER'S NAME AND ADDRESS: James Robert Patterson (Same as insured)
+RELATION TO INSURED: Self
+DATE OF BIRTH: 07/22/1985
+DRIVER'S LICENSE NUMBER: TX-12847562
+STATE: TX
+PURPOSE OF USE: Personal
+USED WITH PERMISSION: Y
+
+DESCRIBE DAMAGE:
+Front passenger side heavily damaged. Front bumper displaced, right headlight assembly shattered,
+right fender crushed inward, passenger door jammed shut. Airbags deployed (front and side curtain).
+Estimated repair cost: $12,500. Vehicle may be a total loss pending full inspection.
+
+CHILD PASSENGER RESTRAINT: N/A - No children in vehicle
+
+OTHER VEHICLE / PROPERTY
+OWNER: Maria Elena Garcia
+ADDRESS: 1893 Barton Springs Rd, Apt 204, Austin, TX 78704
+PHONE: (512) 555-0384
+VEHICLE: 2019 Toyota Camry LE, White
+PLATE NUMBER: MRG-7761, State: TX
+V.I.N.: 4T1B11HK5KU823491
+DAMAGE: Front end damage, hood buckled, radiator punctured, both front airbags deployed.
+INSURANCE: Lone Star Auto Insurance, Policy #LSA-2024-0451928
+
+DRIVER OF OTHER VEHICLE: Maria Elena Garcia (Same as owner)
+DATE OF BIRTH: 11/03/1992
+DRIVER'S LICENSE: TX-98234671
+
+INJURIES
+INJURED PARTY 1: James Robert Patterson (Insured Driver)
+    INJURY DESCRIPTION: Neck strain (whiplash), mild concussion, bruising from seatbelt
+    TREATMENT: Transported to St. David's South Austin Medical Center via EMS
+    STATUS: Released same day with follow-up recommended
+
+INJURED PARTY 2: Maria Elena Garcia (Other Driver)
+    INJURY DESCRIPTION: Minor cuts from deployed airbag, complained of chest pain
+    TREATMENT: Treated at scene by EMS, declined hospital transport
+    STATUS: Released at scene
+
+WITNESSES
+WITNESS 1: David Chen
+    ADDRESS: 2100 S Congress Ave, Austin, TX 78704
+    PHONE: (512) 555-0492
+    STATEMENT: "I was walking on the sidewalk and saw the white car run the red light and hit the
+    other car. The light was clearly red for the white car."
+
+WITNESS 2: Amanda Foster  
+    ADDRESS: 3847 Manchaca Rd, Austin, TX 78704
+    PHONE: (512) 555-0618
+    STATEMENT: "I was stopped at the intersection in the turn lane. The white Toyota definitely
+    ran the red light. The Honda had a green light."
+
+ESTIMATE OF DAMAGE
+INSURED VEHICLE: $12,500 (pending full inspection - possible total loss)
+OTHER VEHICLE: $8,200
+
+TOTAL ESTIMATED DAMAGES: $20,700
+
+REMARKS:
+Insured has dash camera footage of the incident which has been preserved. Footage clearly shows
+the traffic light status at the time of impact. Insured's policy includes collision coverage with
+$500 deductible and uninsured/underinsured motorist coverage.
+
+REPORTED BY: Sarah Mitchell, Riverside Insurance Group
+DATE REPORTED: 03/15/2024
