@@ -31,12 +31,12 @@ class ExtractionAgent:
         """Extract structured claim data from raw document text."""
         # Keep startup independent of API credentials.
         if self._client is None:
-            key = self._api_key or os.getenv("NVIDIA_API_KEY")
+            key = self._api_key or os.getenv("GROQ_API_KEY")
             if not key:
-                raise RuntimeError("NVIDIA_API_KEY is not set. Please add it to your .env file.")
+                raise RuntimeError("GROQ_API_KEY is not set. Please add it to your .env file.")
             
             self._client = OpenAI(
-                base_url="https://integrate.api.nvidia.com/v1",
+                base_url="https://api.groq.com/openai/v1",
                 api_key=key
             )
 
@@ -45,7 +45,7 @@ class ExtractionAgent:
             schema_json = ExtractionResultSchema.model_json_schema()
             
             completion = self._client.chat.completions.create(
-                model="minimaxai/minimax-m2.7",
+                model="llama-3.3-70b-versatile",
                 messages=[
                     {"role": "system", "content": self.system_prompt},
                     {"role": "user", "content": f"Extract data strictly according to this JSON Schema:\n{json.dumps(schema_json)}\n\nHere is the document text:\n\n{raw_text}"}

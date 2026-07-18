@@ -7,7 +7,7 @@ from services.routing_engine import RoutingEngine
 load_dotenv()
 
 def main():
-    print('--- ClaimSense Autonomous Agent Initialized ---')
+    print('--- Synpax Autonomous Agent Initialized ---')
     print(f"Environment: {os.getenv('NODE_ENV', 'development')}")
     
     print('\n--- Phase 2: Testing Document Ingestion ---')

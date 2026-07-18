@@ -1,6 +1,6 @@
-# ClaimSense — Technical Architecture & Documentation
+# Synpax — Technical Architecture & Documentation
 
-ClaimSense is an AI-augmented claims processing platform that automates the lifecycle of a First Notice of Loss (FNOL) document. It uses a strict decoupling pattern: **probabilistic inference (AI) for data extraction** and **deterministic rules (pure code) for decision routing**.
+Synpax is an AI-augmented claims processing platform that automates the lifecycle of a First Notice of Loss (FNOL) document. It uses a strict decoupling pattern: **probabilistic inference (AI) for data extraction** and **deterministic rules (pure code) for decision routing**.
 
 > **⚠️ IMPORTANT: API Key Expiration**
 > If you are testing the live demo or running this project locally and the document analysis fails, the free-tier NVIDIA NIM API key has likely expired or hit its limit. To run and test the application, please use your own NVIDIA API key. Check the [Deployment Guide](#5-deployment-guide) below for instructions on where to add it.
@@ -179,7 +179,7 @@ A custom ASGI middleware prevents boundary bursts common in fixed-window algorit
 ### 4.3 Frontend Hash Router & Persistence
 The SPA uses zero build tools.
 - **Routing:** Listens to `window.location.hash` changes (e.g., `#/dashboard`, `#/queue/FAST_TRACK`) to dynamically re-render tables.
-- **State:** Because there is no external database in this POC, claims are serialized and synced to browser `localStorage` (`claimsense_claims`). This ensures state survives page refreshes and provides bookmarkable URLs.
+- **State:** Because there is no external database in this POC, claims are serialized and synced to browser `localStorage` (`synpax_claims`). This ensures state survives page refreshes and provides bookmarkable URLs.
 
 ---
 
@@ -190,7 +190,7 @@ The SPA uses zero build tools.
 1. **Clone & Virtual Environment:**
    ```bash
    git clone <repo-url>
-   cd ClaimSense
+   cd Synpax
    python3 -m venv venv
    source venv/bin/activate
    pip install -r requirements.txt
@@ -216,7 +216,7 @@ The SPA uses zero build tools.
 
 ### 5.2 Production Deployment (Render)
 
-ClaimSense ships with a `render.yaml` for infrastructure-as-code deployment on Render.
+Synpax ships with a `render.yaml` for infrastructure-as-code deployment on Render.
 
 **Blueprint Deployment Steps:**
 1. Push your repository to GitHub.

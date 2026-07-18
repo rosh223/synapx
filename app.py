@@ -87,7 +87,7 @@ class RateLimiter(BaseHTTPMiddleware):
 
 # ===== App Setup =====
 
-app = FastAPI(title="ClaimSense", description="Autonomous Insurance Claims Processing Agent")
+app = FastAPI(title="Synpax", description="Autonomous Insurance Claims Processing Agent")
 
 # Apply rate limiter before anything else
 app.add_middleware(RateLimiter)

@@ -3,270 +3,307 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ClaimSense
-    </title>
+    <title>Synpax | AI Agent</title>
     <meta name="description" content="Autonomous FNOL claims processing agent with AI-powered data extraction and routing.">
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Vue 3 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <!-- Styles -->
     <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
+    <div id="app" v-cloak>
+        <div class="app-container">
+            
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <div class="logo-box">
+                        <i class="ph-fill ph-hexagon"></i>
+                    </div>
+                    <div class="brand-text">
+                        <h1>Synpax</h1>
+                        <p>Autonomous AI Agent</p>
+                    </div>
+                </div>
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <a href="#/dashboard" class="sidebar-brand-link">
-            <div class="sidebar-brand">
-                <svg viewBox="0 0 200 160" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" class="brand-logo-svg">
-                    <defs>
-                        <linearGradient id="gradS" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#1e3a8a" />
-                            <stop offset="50%" stop-color="#0284c7" />
-                            <stop offset="100%" stop-color="#14b8a6" />
-                        </linearGradient>
-                    </defs>
+                <nav class="nav-menu">
+                    <div class="nav-group">
+                        <span class="nav-label">Workspace</span>
+                        <a href="#" :class="['nav-link', { active: currentTab === 'dashboard' }]" @click.prevent="currentTab = 'dashboard'; currentFilter = null">
+                            <i class="ph ph-squares-four"></i>
+                            <span>Dashboard</span>
+                        </a>
+                        <a href="#" :class="['nav-link', { active: currentTab === 'upload' }]" @click.prevent="currentTab = 'upload'">
+                            <i class="ph ph-upload-simple"></i>
+                            <span>Upload FNOL</span>
+                        </a>
+                    </div>
+
+                    <div class="nav-group mt-auto">
+                        <span class="nav-label">Queue Filters</span>
+                        <a href="#" v-for="queue in queues" :key="queue.id"
+                           :class="['nav-link nav-filter', { active: currentFilter === queue.id, 'active-queue': currentFilter === queue.id }]"
+                           @click.prevent="filterQueue(queue.id)">
+                            <div class="queue-indicator" :style="{ backgroundColor: queue.color, boxShadow: currentFilter === queue.id ? `0 0 10px ${queue.color}` : 'none' }"></div>
+                            <span>{{ queue.label }}</span>
+                            <span class="badge">{{ getQueueCount(queue.id) }}</span>
+                        </a>
+                    </div>
+                </nav>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <header class="topbar">
+                    <h2>{{ topbarTitle }}</h2>
+                    <div class="topbar-actions">
+                        <button class="btn btn-outline" @click="clearCache">
+                            <i class="ph ph-trash"></i> Clear Data
+                        </button>
+                        <button class="btn btn-primary" @click="currentTab = 'upload'">
+                            <i class="ph ph-plus"></i> New Claim
+                        </button>
+                    </div>
+                </header>
+
+                <div class="content-scroll">
                     
-                    <g transform="translate(100, 60)">
-                        <path d="M 25,-25 C 25,-45 -25,-45 -25,-25 C -25,-5 25,5 25,25 C 25,45 -25,45 -25,25" fill="none" stroke="url(#gradS)" stroke-width="14" stroke-linecap="round" />
-                        <path d="M -35,-25 C -35,-55 35,-55 35,-25" fill="none" stroke="#0ea5e9" stroke-width="4" stroke-linecap="round" opacity="0.4"/>
-                        <path d="M 35,25 C 35,55 -35,55 -35,25" fill="none" stroke="#14b8a6" stroke-width="4" stroke-linecap="round" opacity="0.4"/>
-                    </g>
-
-                    <text x="100" y="125" text-anchor="middle" font-family="'Inter', sans-serif" font-weight="800" font-size="24" fill="#0f172a" letter-spacing="-0.5">CLAIM<tspan fill="#0284c7">SENSE</tspan></text>
-                    <text x="100" y="144" text-anchor="middle" font-family="'Inter', sans-serif" font-weight="600" font-size="8" fill="#64748b" letter-spacing="1">INSURANCE CLAIMS PLATFORM</text>
-                </svg>
-            </div>
-        </a>
-
-        <nav class="sidebar-nav">
-            <div class="nav-section">
-                <span class="nav-label">Workspace</span>
-                <a href="#/dashboard" class="nav-item active" data-tab="dashboard">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-                    Dashboard
-                    <span class="nav-badge" id="claimCount">0</span>
-                </a>
-                <a href="#/upload" class="nav-item" data-tab="upload">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                    Upload FNOL
-                </a>
-            </div>
-
-            <div class="nav-section">
-                <span class="nav-label">Queues</span>
-                <a href="#/queue/FAST_TRACK" class="nav-item queue-item" data-filter="FAST_TRACK">
-                    <span class="queue-dot dot-green"></span>
-                    Fast-track
-                    <span class="nav-badge" id="qFastTrack">0</span>
-                </a>
-                <a href="#/queue/MANUAL_REVIEW" class="nav-item queue-item" data-filter="MANUAL_REVIEW">
-                    <span class="queue-dot dot-yellow"></span>
-                    Manual Review
-                    <span class="nav-badge" id="qManualReview">0</span>
-                </a>
-                <a href="#/queue/INVESTIGATION" class="nav-item queue-item" data-filter="INVESTIGATION">
-                    <span class="queue-dot dot-red"></span>
-                    Investigation
-                    <span class="nav-badge" id="qInvestigation">0</span>
-                </a>
-                <a href="#/queue/SPECIALIST" class="nav-item queue-item" data-filter="SPECIALIST">
-                    <span class="queue-dot dot-blue"></span>
-                    Specialist
-                    <span class="nav-badge" id="qSpecialist">0</span>
-                </a>
-            </div>
-        </nav>
-    </aside>
-
-    <!-- Main Content -->
-    <div class="main-wrapper">
-
-        <header class="topbar">
-            <h1 class="topbar-title">Claims Processing Dashboard</h1>
-            <div class="topbar-actions">
-                <button class="btn-secondary" id="topUploadBtn">Upload FNOL</button>
-                <button class="btn-primary" id="topProcessBtn">View All Claims</button>
-            </div>
-        </header>
-
-        <main class="main-content">
-
-            <!-- Dashboard View -->
-            <div class="view" id="dashboardView">
-
-                <!-- Stats Row -->
-                <div class="stats-row">
-                    <div class="stat-card">
-                        <span class="stat-label">Claims Processed</span>
-                        <span class="stat-value" id="statTotal">0</span>
-                        <span class="stat-sub" id="statTotalSub">No claims yet</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-label">Avg Processing Time</span>
-                        <span class="stat-value" id="statAvgTime">—</span>
-                        <span class="stat-sub">AI-assisted</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-label">Pending Review</span>
-                        <span class="stat-value" id="statPending">0</span>
-                        <span class="stat-sub" id="statPendingSub">—</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-label">Auto-routed</span>
-                        <span class="stat-value" id="statAutoRouted">0%</span>
-                        <span class="stat-sub" id="statAutoSub">—</span>
-                    </div>
-                </div>
-
-                <!-- Tabs -->
-                <div class="tab-bar">
-                    <button class="tab active" data-panel="queue">Processing Queue</button>
-                    <button class="tab" data-panel="uploadPanel">Upload FNOL</button>
-                    <button class="tab" data-panel="jsonPanel">JSON Output</button>
-                </div>
-
-                <!-- Processing Queue Panel -->
-                <div class="panel" id="queuePanel">
-                    <!-- Pipeline -->
-                    <div class="pipeline" id="pipeline" style="display:none;">
-                        <div class="pipeline-step" id="pipeIngest">
-                            <div class="pipe-circle"></div>
-                            <span>Ingest</span>
-                        </div>
-                        <div class="pipeline-line" id="pipeLine1"></div>
-                        <div class="pipeline-step" id="pipeExtract">
-                            <div class="pipe-circle"></div>
-                            <span>Extract</span>
-                        </div>
-                        <div class="pipeline-line" id="pipeLine2"></div>
-                        <div class="pipeline-step" id="pipeValidate">
-                            <div class="pipe-circle"></div>
-                            <span>Validate</span>
-                        </div>
-                        <div class="pipeline-line" id="pipeLine3"></div>
-                        <div class="pipeline-step" id="pipeRoute">
-                            <div class="pipe-circle"></div>
-                            <span>Route</span>
-                        </div>
-                        <div class="pipeline-line" id="pipeLine4"></div>
-                        <div class="pipeline-step" id="pipeComplete">
-                            <div class="pipe-circle"></div>
-                            <span>Complete</span>
-                        </div>
-                    </div>
-
-                    <!-- Table -->
-                    <div class="table-wrap">
-                        <table class="data-table" id="claimsTable">
-                            <thead>
-                                <tr>
-                                    <th>Claim ID</th>
-                                    <th>Policyholder</th>
-                                    <th>Type</th>
-                                    <th>Est. Damage</th>
-                                    <th>Status</th>
-                                    <th>Route</th>
-                                </tr>
-                            </thead>
-                            <tbody id="claimsBody">
-                                <tr class="empty-row">
-                                    <td colspan="6">No claims processed yet. Upload an FNOL document to get started.</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Upload FNOL Panel -->
-                <div class="panel" id="uploadPanelPanel" style="display:none;">
-                    <div class="upload-area">
-                        <div class="dropzone" id="dropzone">
-                            <svg class="dropzone-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                <polyline points="17 8 12 3 7 8"/>
-                                <line x1="12" y1="3" x2="12" y2="15"/>
-                            </svg>
-                            <p class="dropzone-text">Drag and drop your FNOL document here</p>
-                            <p class="dropzone-sub">or <label for="fileInput" class="dropzone-link">browse files</label></p>
-                            <p class="dropzone-hint">Supports PDF and TXT</p>
-                            <input type="file" id="fileInput" accept=".pdf,.txt" hidden>
-                        </div>
-
-                        <div class="sample-files">
-                            <h4>Try with sample data:</h4>
-                            <div class="sample-links">
-                                <a href="/static/samples/claim_complete.txt" download class="sample-link">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                                    Complete Data
-                                </a>
-                                <a href="/static/samples/claim_half_filled.txt" download class="sample-link">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                                    Half-Filled
-                                </a>
-                                <a href="/static/samples/claim_empty.txt" download class="sample-link">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                                    Empty Form
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="file-info" id="fileInfo" style="display: none;">
-                            <div class="file-details">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                                    <polyline points="14 2 14 8 20 8"/>
-                                </svg>
-                                <div>
-                                    <span class="file-name" id="fileName"></span>
-                                    <span class="file-size" id="fileSize"></span>
+                    <!-- Dashboard View -->
+                    <transition name="fade" mode="out-in">
+                        <div v-if="currentTab === 'dashboard'" class="dashboard-view" key="dashboard">
+                            
+                            <!-- Stats Grid -->
+                            <div class="stats-grid">
+                                <div class="stat-card glass-panel">
+                                    <div class="stat-icon" style="background: rgba(14, 165, 233, 0.1); color: #0ea5e9;">
+                                        <i class="ph-fill ph-stack"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <h3>Total Claims</h3>
+                                        <p class="stat-value">{{ claims.length }}</p>
+                                    </div>
+                                </div>
+                                <div class="stat-card glass-panel">
+                                    <div class="stat-icon" style="background: rgba(34, 197, 94, 0.1); color: #22c55e;">
+                                        <i class="ph-fill ph-lightning"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <h3>Auto-Routed</h3>
+                                        <p class="stat-value">{{ autoRoutedPercent }}%</p>
+                                    </div>
+                                </div>
+                                <div class="stat-card glass-panel">
+                                    <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">
+                                        <i class="ph-fill ph-clock-countdown"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <h3>Pending Review</h3>
+                                        <p class="stat-value">{{ pendingReviewCount }}</p>
+                                    </div>
+                                </div>
+                                <div class="stat-card glass-panel">
+                                    <div class="stat-icon" style="background: rgba(168, 85, 247, 0.1); color: #a855f7;">
+                                        <i class="ph-fill ph-cpu"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <h3>Avg Processing</h3>
+                                        <p class="stat-value">{{ avgProcessingTime }}s</p>
+                                    </div>
                                 </div>
                             </div>
-                            <button class="file-remove" id="fileRemove" title="Remove file">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-                                </svg>
-                            </button>
+
+                            <!-- Claims Table -->
+                            <div class="table-container glass-panel mt-6">
+                                <div class="table-header">
+                                    <h3>{{ currentFilter ? queues.find(q => q.id === currentFilter).label + ' Queue' : 'Recent Claims' }}</h3>
+                                    <button class="btn btn-icon" v-if="currentFilter" @click="currentFilter = null" title="Clear Filter">
+                                        <i class="ph ph-x"></i>
+                                    </button>
+                                </div>
+                                
+                                <div v-if="filteredClaims.length === 0" class="empty-state">
+                                    <i class="ph ph-folder-open text-muted"></i>
+                                    <p>No claims found.</p>
+                                </div>
+
+                                <table class="data-table" v-else>
+                                    <thead>
+                                        <tr>
+                                            <th>Claim ID</th>
+                                            <th>Policyholder</th>
+                                            <th>Category</th>
+                                            <th>Est. Damage</th>
+                                            <th>Route Assignment</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="claim in filteredClaims" :key="claim.id" class="table-row">
+                                            <td class="fw-600 font-mono">{{ claim.id }}</td>
+                                            <td>{{ claim.data.extractedFields.policy?.policyholderName || 'Unknown' }}</td>
+                                            <td>
+                                                <div class="category-badge">
+                                                    <i :class="getCategoryIcon(claim)"></i>
+                                                    {{ getCategoryName(claim) }}
+                                                </div>
+                                            </td>
+                                            <td class="font-mono">{{ formatCurrency(claim.data.extractedFields.initialEstimate) }}</td>
+                                            <td>
+                                                <div class="route-badge" :style="getRouteStyle(claim.data.recommendedRoute)">
+                                                    {{ formatRoute(claim.data.recommendedRoute) }}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-icon primary-hover" @click="viewClaim(claim)">
+                                                    <i class="ph ph-arrow-right"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
 
-                        <button class="btn-primary btn-analyze" id="analyzeBtn" disabled>
-                            <span id="btnText">Analyze Claim</span>
-                            <span id="btnSpinner" class="spinner" style="display: none;"></span>
-                        </button>
+                        <!-- Upload View -->
+                        <div v-else-if="currentTab === 'upload'" class="upload-view glass-panel" key="upload">
+                            <div class="upload-area" :class="{ 'drag-over': isDragging }" @dragover.prevent="isDragging = true" @dragleave.prevent="isDragging = false" @drop.prevent="handleDrop">
+                                
+                                <div v-if="!selectedFile && !isProcessing" class="upload-prompt">
+                                    <div class="upload-icon-pulse">
+                                        <i class="ph ph-upload-simple"></i>
+                                    </div>
+                                    <h3>Upload FNOL Document</h3>
+                                    <p class="text-muted">Drag & drop a PDF or TXT file here, or click to browse</p>
+                                    <button class="btn btn-outline mt-4" @click="$refs.fileInput.click()">Select File</button>
+                                    <input type="file" ref="fileInput" accept=".pdf,.txt" class="hidden-input" @change="handleFileSelect">
+                                </div>
 
-                        <!-- Error -->
-                        <div class="alert alert-error" id="errorDisplay" style="display: none;">
-                            <span id="errorText"></span>
+                                <div v-else-if="selectedFile && !isProcessing" class="file-ready">
+                                    <div class="file-card glass-panel">
+                                        <div class="file-icon"><i class="ph-fill ph-file-text"></i></div>
+                                        <div class="file-details">
+                                            <h4>{{ selectedFile.name }}</h4>
+                                            <p>{{ formatFileSize(selectedFile.size) }}</p>
+                                        </div>
+                                        <button class="btn btn-icon text-muted" @click="selectedFile = null"><i class="ph ph-x"></i></button>
+                                    </div>
+                                    <button class="btn btn-primary btn-large mt-6 w-full" @click="analyzeClaim">
+                                        <i class="ph ph-magic-wand"></i> Analyze with AI
+                                    </button>
+                                </div>
+
+                                <div v-else class="processing-state">
+                                    <div class="ai-loader">
+                                        <div class="loader-ring"></div>
+                                        <i class="ph-fill ph-brain"></i>
+                                    </div>
+                                    <h3 class="mt-4 pulse-text">Agent analyzing document...</h3>
+                                    <div class="processing-steps">
+                                        <div class="step" :class="{ active: processingStep >= 1 }"><div class="step-dot"></div> Ingesting</div>
+                                        <div class="step" :class="{ active: processingStep >= 2 }"><div class="step-dot"></div> Extracting Entities</div>
+                                        <div class="step" :class="{ active: processingStep >= 3 }"><div class="step-dot"></div> Validating Rules</div>
+                                        <div class="step" :class="{ active: processingStep >= 4 }"><div class="step-dot"></div> Routing</div>
+                                    </div>
+                                </div>
+
+                                <div v-if="errorMessage" class="error-toast">
+                                    <i class="ph-fill ph-warning-circle"></i> {{ errorMessage }}
+                                </div>
+                            </div>
+                            
+                            <div class="sample-data-section mt-6">
+                                <h4>Test with Sample Data</h4>
+                                <div class="sample-grid">
+                                    <a href="/static/samples/claim_complete.txt" download class="sample-card glass-panel">
+                                        <i class="ph ph-download-simple"></i>
+                                        <span>Complete Data</span>
+                                    </a>
+                                    <a href="/static/samples/claim_half_filled.txt" download class="sample-card glass-panel">
+                                        <i class="ph ph-download-simple"></i>
+                                        <span>Missing Fields</span>
+                                    </a>
+                                    <a href="/static/samples/claim_empty.txt" download class="sample-card glass-panel">
+                                        <i class="ph ph-download-simple"></i>
+                                        <span>Empty Form</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </transition>
+
+                </div>
+            </main>
+            
+            <!-- Claim Modal -->
+            <transition name="modal-fade">
+                <div v-if="activeClaim" class="modal-overlay" @click.self="activeClaim = null">
+                    <div class="modal-content glass-panel">
+                        <header class="modal-header">
+                            <div>
+                                <span class="font-mono text-muted text-sm">{{ activeClaim.id }}</span>
+                                <h2>Claim Details</h2>
+                            </div>
+                            <button class="btn btn-icon" @click="activeClaim = null"><i class="ph ph-x"></i></button>
+                        </header>
+                        
+                        <div class="modal-body">
+                            <!-- Banner -->
+                            <div class="route-banner" :style="getRouteBannerStyle(activeClaim.data.recommendedRoute)">
+                                <div class="banner-header">
+                                    <i :class="getRouteIcon(activeClaim.data.recommendedRoute)"></i>
+                                    <h3>{{ formatRoute(activeClaim.data.recommendedRoute) }}</h3>
+                                </div>
+                                <p>{{ activeClaim.data.reasoning }}</p>
+                            </div>
+                            
+                            <div class="grid-2 mt-6">
+                                <div class="detail-card">
+                                    <h4 class="card-title">Policy Information</h4>
+                                    <div class="detail-row"><span>Policyholder</span> <strong>{{ activeClaim.data.extractedFields.policy?.policyholderName || '—' }}</strong></div>
+                                    <div class="detail-row"><span>Policy No.</span> <strong class="font-mono">{{ activeClaim.data.extractedFields.policy?.policyNumber || '—' }}</strong></div>
+                                    <div class="detail-row"><span>Effective</span> <strong>{{ activeClaim.data.extractedFields.policy?.effectiveDateStart || '—' }} to {{ activeClaim.data.extractedFields.policy?.effectiveDateEnd || '—' }}</strong></div>
+                                </div>
+                                
+                                <div class="detail-card">
+                                    <h4 class="card-title">Incident</h4>
+                                    <div class="detail-row"><span>Date/Time</span> <strong>{{ activeClaim.data.extractedFields.incident?.date || '—' }} {{ activeClaim.data.extractedFields.incident?.time || '' }}</strong></div>
+                                    <div class="detail-row"><span>Location</span> <strong>{{ activeClaim.data.extractedFields.incident?.location || '—' }}</strong></div>
+                                    <div class="detail-row"><span>Report No.</span> <strong class="font-mono">{{ activeClaim.data.extractedFields.incident?.reportNumber || '—' }}</strong></div>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-card mt-4">
+                                <h4 class="card-title">Description</h4>
+                                <p class="text-block">{{ activeClaim.data.extractedFields.incident?.description || 'No description provided.' }}</p>
+                            </div>
+                            
+                            <div class="grid-2 mt-4" v-if="activeClaim.data.missingFields && activeClaim.data.missingFields.length > 0">
+                                <div class="detail-card warning-card border-glow">
+                                    <h4 class="card-title text-warning"><i class="ph-fill ph-warning"></i> Missing Mandatory Fields</h4>
+                                    <ul class="missing-list">
+                                        <li v-for="field in activeClaim.data.missingFields" :key="field">{{ field }}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <!-- JSON Tabs -->
+                            <div class="code-section mt-6">
+                                <h4>Raw JSON Output</h4>
+                                <pre class="code-block glass-panel"><code>{{ JSON.stringify(activeClaim.data, null, 2) }}</code></pre>
+                            </div>
                         </div>
                     </div>
                 </div>
+            </transition>
 
-                <!-- JSON Output Panel -->
-                <div class="panel" id="jsonPanelPanel" style="display:none;">
-                    <div class="json-area">
-                        <pre><code id="jsonOutput">No data yet. Process a claim to see the JSON output.</code></pre>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Claim Detail Modal -->
-            <div class="modal-overlay" id="claimModal" style="display:none;">
-                <div class="modal">
-                    <div class="modal-header">
-                        <h2 id="modalTitle">Claim Details</h2>
-                        <button class="modal-close" id="modalClose">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-                            </svg>
-                        </button>
-                    </div>
-                    <div class="modal-body" id="modalBody"></div>
-                </div>
-            </div>
-
-        </main>
+        </div>
     </div>
-
-    <script src="/static/app.js?v=5"></script>
+    <script src="/static/app.js"></script>
 </body>
 </html>
