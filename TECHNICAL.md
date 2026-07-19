@@ -8,6 +8,40 @@ This document serves as a comprehensive technical breakdown of the Synpax applic
 
 Synpax employs a strictly decoupled architecture, separating **probabilistic inference** (the AI) from **deterministic business logic** (the routing rules). 
 
+### High-Level Architecture Diagram
+```mermaid
+graph TD
+    %% Client Side
+    subgraph Client Browser
+        UI[Vue.js SPA Hash Router]
+        LS[(localStorage)]
+        UI <-->|Hydrates/Persists| LS
+    end
+
+    %% Backend Server
+    subgraph FastAPI Backend
+        RL[API Gateway & Rate Limiter]
+        DP[Document Parser]
+        EA[Extraction Agent]
+        RE[Routing Engine]
+    end
+
+    %% External Services
+    subgraph External
+        LLM[Groq Llama 3.3]
+    end
+
+    %% Flow
+    UI -->|HTTP POST /api/process| RL
+    UI -->|HTTP GET /static/*| RL
+    RL -->|Raw Document| DP
+    DP -->|Parsed Text| EA
+    EA <-->|Extract Data| LLM
+    EA -->|Validated Pydantic Schema| RE
+    RE -->|JSON Output & Routing Decision| RL
+    RL -->|HTTP 200 OK| UI
+```
+
 ### 1.1 The Frontend (Vue.js SPA)
 - **Zero-Build Architecture**: The frontend is a vanilla Single Page Application (SPA) built using Vue.js imported via CDN. No Node.js, Webpack, or Vite compilation is required.
 - **Hash Routing**: Uses `window.location.hash` (e.g., `#/dashboard`, `#/upload`) for instant, client-side navigation without triggering full page reloads.
@@ -19,6 +53,60 @@ Synpax employs a strictly decoupled architecture, separating **probabilistic inf
 - **AI Extraction Agent**: Connects to the **Groq API** to perform high-speed inference using `llama-3.3-70b-versatile`. It injects the raw text and a strict system prompt, mandating a JSON output.
 - **Data Validation**: Uses **Pydantic** (`schemas.py`) to enforce strict type-checking on the AI's output.
 - **Deterministic Routing Engine**: A hard-coded cascading rule system that evaluates the validated Pydantic model and assigns the claim to the appropriate queue (Fast-Track, Manual Review, Investigation, or Specialist).
+
+### End-to-End Sequence Flow
+When a document hits `/api/process`, it undergoes a strict multi-step pipeline.
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant App as Frontend SPA
+    participant API as FastAPI Router
+    participant Parser as Document Parser
+    participant Agent as Extraction Agent
+    participant LLM as Groq (Llama 3.3)
+    participant Engine as Routing Engine
+    
+    User->>App: Upload FNOL (PDF/TXT)
+    App->>API: POST /api/process (multipart/form-data)
+    
+    API->>Parser: Save to tmp & parse()
+    Parser-->>API: Extracted Raw Text
+    
+    API->>Agent: extract_claim_data(raw_text)
+    Agent->>LLM: Prompt + Raw Text (JSON schema requested)
+    LLM-->>Agent: JSON Response
+    Agent->>Agent: Regex Extract & Validate via Pydantic
+    Agent-->>API: ExtractionResultSchema
+    
+    API->>Engine: evaluate(ExtractionResultSchema)
+    Engine->>Engine: Run Cascading Priority Rules
+    Engine-->>API: FinalOutputSchema
+    
+    API-->>App: HTTP 200 (JSON)
+    App->>App: Persist to localStorage
+    App->>User: Render Dashboard
+```
+
+### Deterministic Routing Logic
+Insurance logic cannot rely on LLM hallucinations. The `RoutingEngine` ensures repeatable, auditable queue assignment using a hard-coded Python rule cascade. The first rule to match short-circuits the rest.
+
+```mermaid
+flowchart TD
+    Start([ExtractionResultSchema Input]) --> R1{1. Data Incomplete?}
+    
+    R1 -->|Yes| MR[MANUAL_REVIEW]
+    R1 -->|No| R2{2. Fraud Signals?}
+    
+    R2 -->|Yes| INV[INVESTIGATION]
+    R2 -->|No| R3{3. Bodily Injuries?}
+    
+    R3 -->|Yes| SQ[SPECIALIST_QUEUE]
+    R3 -->|No| R4{4. Estimate < $25,000?}
+    
+    R4 -->|Yes| FT[FAST_TRACK]
+    R4 -->|No| MR2[MANUAL_REVIEW]
+```
 
 ---
 
